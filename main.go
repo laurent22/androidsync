@@ -2,23 +2,68 @@ package main
 
 import (
 	"./androidsync"
-	"log"
 	"os"
+	"log"
+	"flag"
+	"strings"
+	"fmt"
 )
 
+func Usage(errorMessage string) {
+	if errorMessage != "" {
+		fmt.Println("Error:", errorMessage)
+	}
+	fmt.Println("Usage: androidsync [flags] [source folder] [target folder]")
+	fmt.Println("")
+	flag.PrintDefaults()
+}
+
 func main() {
+	var flagAdb string
+	var flagExclude string
+	var flagDelete bool
+	var flagHelp bool
+	
+	flag.StringVar(&flagAdb, "adb", "", "Full path of adb executable.")
+	flag.StringVar(&flagExclude, "exclude", "", "File or folder paths to exclude, separated by ';'. Wildcard '*' supported. End path with a slash to specify a folder.")
+	flag.BoolVar(&flagDelete, "delete", false, "If specified, delete files or folders in target that are not in source.")
+	flag.BoolVar(&flagHelp, "help", false, "Displays help message.")
+	flag.Parse()
+	
+	flagAdb = strings.TrimSpace(flagAdb)
+	flagExclude = strings.TrimSpace(flagExclude)
+		
+	if flagHelp {
+		Usage("")
+		return
+	}
+	
+	if flagAdb == "" {
+		Usage("adb path not specified.")
+		return
+	}
+	
+	args := flag.Args()
+	if len(args) != 2 {
+		Usage("source and target path not specified.")
+		return
+	}
+	
+	sourcePath := args[0]
+	targetPath := args[1]
+	
 	synchro := androidsync.New()
-	synchro.PathSeparator = "/"
+	
+	if flagExclude != "" {
+		excludedItems := strings.Split(flagExclude, ";")
+		for _, p := range excludedItems {
+			synchro.IgnorePattern(strings.TrimSpace(p))
+		}
+	}
+	
+	// TODO: Check source and target paths have a trailing "/"
+	
 	synchro.Logger = log.New(os.Stdin, "", log.LstdFlags)
-	synchro.AdbPath = "/Developer/Applications/adt/sdk/platform-tools/adb"
-	synchro.IgnorePattern("PSX.*")
-	synchro.IgnorePattern("*.mkv")
-	synchro.IgnorePattern("*.mp4")
-	synchro.IgnorePattern("*.flv")
-	synchro.IgnorePattern("*.iso")
-	synchro.IgnorePattern("*.smc")
-	synchro.IgnorePattern("cache/")
-	synchro.IgnorePattern("Cache/")
-	synchro.IgnorePattern("app_news_image_cache/")
-	synchro.Synchronize("/", "/Volumes/Donnees/targetsync/")
+	synchro.AdbPath = flagAdb
+	synchro.Synchronize(sourcePath, targetPath)
 }

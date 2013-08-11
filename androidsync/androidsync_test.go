@@ -34,6 +34,7 @@ func TestPatternMatchesFile(t *testing.T) {
 		{"/escape/this/*[test]", "/escape/this/abcd[test]", "/", true},
 		{"\\abcd\\efgh\\*", "\\abcd\\efgh\\wintesting", "\\", true},
 		{"*.avi", "/some/path/film.avi", "/", true},
+		{"cache/", "/cache/", "/", true},
 	}
 	
 	for _, d := range tests {
