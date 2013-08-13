@@ -166,7 +166,7 @@ func (this *AndroSync) timestampAreSame(t1 time.Time, t2 time.Time, interval tim
 
 func (this *AndroSync) Synchronize(androidPath string, localPath string) error {
 	if this.isIgnoredPath(androidPath) {
-		this.Logger.Println("Skipping: " + androidPath)
+		// this.Logger.Println("Skipping: " + androidPath)
 		return nil
 	}
 	
@@ -191,7 +191,7 @@ func (this *AndroSync) Synchronize(androidPath string, localPath string) error {
 			continue
 		} else {
 			if this.isIgnoredPath(folderItem.path) {
-				this.Logger.Println("Skipping: " + folderItem.path)
+				// this.Logger.Println("Skipping: " + folderItem.path)
 				continue
 			}
 		}

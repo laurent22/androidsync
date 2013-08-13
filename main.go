@@ -21,12 +21,10 @@ func Usage(errorMessage string) {
 func main() {
 	var flagAdb string
 	var flagExclude string
-	var flagDelete bool
 	var flagHelp bool
 	
 	flag.StringVar(&flagAdb, "adb", "", "Full path of adb executable.")
 	flag.StringVar(&flagExclude, "exclude", "", "File or folder paths to exclude, separated by ';'. Wildcard '*' supported. End path with a slash to specify a folder.")
-	flag.BoolVar(&flagDelete, "delete", false, "If specified, delete files or folders in target that are not in source.")
 	flag.BoolVar(&flagHelp, "help", false, "Displays help message.")
 	flag.Parse()
 	
