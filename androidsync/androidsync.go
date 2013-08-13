@@ -215,6 +215,8 @@ func (this *AndroSync) Synchronize(androidPath string, localPath string) error {
 					fileHasChanged = true
 				}
 			}
+		} else {
+			fileHasChanged = true
 		}
 		if !fileHasChanged {
 			continue
