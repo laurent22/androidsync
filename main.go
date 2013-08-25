@@ -63,5 +63,8 @@ func main() {
 	
 	synchro.Logger = log.New(os.Stdin, "", log.LstdFlags)
 	synchro.AdbPath = flagAdb
-	synchro.Synchronize(sourcePath, targetPath)
+	err := synchro.Synchronize(sourcePath, targetPath)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
 }
